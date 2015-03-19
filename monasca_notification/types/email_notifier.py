@@ -15,7 +15,6 @@
 
 import email.mime.text
 import smtplib
-import sys
 import time
 
 from abstract_notifier import AbstractNotifier
@@ -54,6 +53,9 @@ class EmailNotifier(AbstractNotifier):
 
         # Generate the message
         msg = self._create_msg(hostname, notification)
+
+        if not self._smtp and not self._smtp_connect():
+            return False
 
         try:
             self._sendmail(notification, msg)
@@ -95,9 +97,10 @@ class EmailNotifier(AbstractNotifier):
                 smtp.login(self._config['user'], self.config['password'])
 
             self._smtp = smtp
+            return True
         except Exception:
-            self._log.exception("Unable to connect to email server.  Exiting.")
-            sys.exit(1)
+            self._log.exception("Unable to connect to email server.")
+            return False
 
     def _create_msg(self, hostname, notification):
         """Create two kind of messages:

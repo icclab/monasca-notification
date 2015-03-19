@@ -19,6 +19,7 @@ import time
 from monasca_notification.types import email_notifier
 from monasca_notification.types import pagerduty_notifier
 from monasca_notification.types import webhook_notifier
+from monasca_notification.types import occi_webhook_notifier
 
 log = logging.getLogger(__name__)
 
@@ -38,6 +39,7 @@ def init(statsd_obj):
     possible_notifiers.append(email_notifier.EmailNotifier(log))
     possible_notifiers.append(webhook_notifier.WebhookNotifier(log))
     possible_notifiers.append(pagerduty_notifier.PagerdutyNotifier(log))
+    possible_notifiers.append(occi_webhook_notifier.OCCIWebhookNotifier(log))
 
 
 def enabled_notifications():

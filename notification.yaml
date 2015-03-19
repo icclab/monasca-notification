@@ -29,6 +29,12 @@ notification_types:
         timeout: 5
         url: "https://events.pagerduty.com/generic/2010-04-15/create_event.json"
 
+    occi_webhook:
+        user_name: mcn_runtime
+        password: easy_password
+        auth_url: "http://192.168.10.5:5000/v2_0"
+        timeout: 5
+
 processors:
     alarm:
         number: 2

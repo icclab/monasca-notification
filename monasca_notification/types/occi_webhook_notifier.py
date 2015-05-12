@@ -24,6 +24,11 @@ class OCCIWebhookNotifier(AbstractNotifier):
         """Send the notification via webhook
             Posts on the given url using OCCI formatting
         """
+        self._log.info("Notifying alarm {} to {} with action {}"
+                       .format(notification.alarm_name,
+                               notification.state,
+                               notification.address))
+
 
         # static user_name has to be part of the tenant from which the notification was created
         tenant_id = notification.tenant_id
@@ -49,8 +54,7 @@ class OCCIWebhookNotifier(AbstractNotifier):
             'Content-Type': 'text/occi',
             'X-Auth-Token': token,
             'X-Tenant-Name': tenant_name,
-            'X-OCCI-Attribute': notification.alarm_id}
-
+            'X-OCCI-Attribute': 'notification.alarm_name=' + notification.name}
 
         try:
             # Posting on the given URL

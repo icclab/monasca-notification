@@ -37,7 +37,8 @@ class AlarmProcessor(BaseProcessor):
         try:
             self._mysql = MySQLdb.connect(host=mysql_host, user=mysql_user,
                                           passwd=unicode(mysql_passwd).encode('utf-8'),
-                                          db=dbname, ssl=mysql_ssl)
+                                          db=dbname, ssl=mysql_ssl,
+                                          use_unicode=True, charset="utf8")
             self._mysql.autocommit(True)
         except:
             log.exception('MySQL connect failed')
@@ -76,9 +77,10 @@ class AlarmProcessor(BaseProcessor):
             log.debug('Actions are disabled for this alarm.')
             return False
 
-        alarm_age = time.time() - alarm['timestamp']  # Should all be in seconds since epoch
+        alarm_age = time.time() - alarm['timestamp'] / 1000
         if (self._alarm_ttl is not None) and (alarm_age > self._alarm_ttl):
-            log.warn('Received alarm older than the ttl, skipping. Alarm from %s' % time.ctime(alarm['timestamp']))
+            log.warn('Received alarm older than the ttl, skipping. Alarm from %s' %
+                     time.ctime(alarm['timestamp'] / 1000))
             return False
 
         return True
